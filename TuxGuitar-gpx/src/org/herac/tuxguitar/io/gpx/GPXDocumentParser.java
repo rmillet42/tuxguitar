@@ -156,6 +156,7 @@ public class GPXDocumentParser {
 			tgMeasureHeader.setNumber( i + 1 );
 			tgMeasureHeader.setRepeatOpen(mbar.isRepeatStart());
 			tgMeasureHeader.setRepeatClose(mbar.getRepeatCount());
+			tgMeasureHeader.setRepeatAlternative(mbar.getAlternateEndings());
 			tgMeasureHeader.setTripletFeel(parseTripletFeel(mbar));
 			if( mbar.getTime() != null && mbar.getTime().length == 2){
 				tgMeasureHeader.getTimeSignature().setNumerator(mbar.getTime()[0]);

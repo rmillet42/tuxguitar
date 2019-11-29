@@ -10,9 +10,11 @@ public class GPXMasterBar {
 	private int accidentalCount;
 	private String mode;
 	private String tripletFeel;
+	private int alternateEndings;
 	
 	public GPXMasterBar(){
 		this.accidentalCount = 0;
+		this.alternateEndings = 0;
 		this.mode = null;
 	}
 	
@@ -70,5 +72,13 @@ public class GPXMasterBar {
 	
 	public void setTripletFeel(String tripletFeel) {
 		this.tripletFeel = tripletFeel;
+	}
+
+	public int getAlternateEndings() {
+		return alternateEndings;
+	}
+
+	public void setAlternateEndings(int alternateEndings) {
+		this.alternateEndings = alternateEndings;
 	}
 }

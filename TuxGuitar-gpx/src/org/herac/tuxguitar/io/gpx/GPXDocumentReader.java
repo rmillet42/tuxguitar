@@ -235,6 +235,15 @@ public class GPXDocumentReader {
 						}
 					}
 					
+					int[] alternateEndingsValue = this.getChildNodeIntegerContentArray(masterBarNode, "AlternateEndings");
+					if (alternateEndingsValue != null ) {
+					    int altMask = 0;
+					    for (int x : alternateEndingsValue) {
+						altMask |= 1 << (x - 1);
+					    }
+					    masterBar.setAlternateEndings(altMask);
+					}
+
 					Node keyNode = getChildNode(masterBarNode, "Key");
 					if (keyNode != null) {
 						masterBar.setAccidentalCount(this.getChildNodeIntegerContent(keyNode, "AccidentalCount") ); 
