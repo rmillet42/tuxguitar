@@ -190,14 +190,17 @@ public class GPXDocumentReader {
 										chord.setStringCount(getAttributeIntegerValue(diagramNode, "stringCount"));
 										chord.setFretCount(getAttributeIntegerValue(diagramNode, "fretCount"));
 										chord.setBaseFret(getAttributeIntegerValue(diagramNode, "baseFret"));
+										if (chord.getBaseFret() != null) { chord.setBaseFret(chord.getBaseFret() + 1); }
 										if( chord.getFretCount() != null ) {
-											chord.setFrets(new Integer[chord.getFretCount()]);
+											chord.setFrets(new Integer[chord.getStringCount()]);
 											for( int f = 0 ; f < fretsNode.getLength() ; f ++ ){
 												Node fretNode = fretsNode.item( f );
 												if (fretNode.getNodeName().equals("Fret")) {
 													Integer string = getAttributeIntegerValue(fretNode, "string");
-													if( string != null && string > 0 && string <= chord.getFretCount() ) {
-														chord.getFrets()[string - 1] = getAttributeIntegerValue(fretNode, "fret");
+													if( string != null && string >= 0 && string < chord.getStringCount() ) {
+													    Integer fret = getAttributeIntegerValue(fretNode, "fret");
+													    if (fret != null) { fret = fret + chord.getBaseFret() - 1;}
+														chord.getFrets()[chord.getStringCount() - string - 1] = fret;
 													}
 												}
 											}
