@@ -21,6 +21,7 @@ public class TGTrackSpacing extends TGSpacing {
 	public static final int POSITION_TABLATURE = 14;
 	public static final int POSITION_LYRIC = 15;
 	public static final int POSITION_BOTTOM = 16;
+	public static final int POSITION_JUMPS = 17;
 	
 	private static final int[][] POSITIONS = new int[][]{
 		/** SCORE **/
@@ -42,6 +43,7 @@ public class TGTrackSpacing extends TGSpacing {
 				14, //POSITION_TABLATURE
 				15, //POSITION_LYRIC
 				16, //POSITION_BOTTOM
+				5, // POSITION_JUMPS
 			},
 			
 		/** TABLATURE **/
@@ -63,6 +65,7 @@ public class TGTrackSpacing extends TGSpacing {
 				10,  //POSITION_TABLATURE
 				12, //POSITION_LYRIC
 				13, //POSITION_BOTTOM
+				5, // POSITION_JUMPS
 			},
 			
 		/** SCORE | TABLATURE **/
@@ -84,10 +87,11 @@ public class TGTrackSpacing extends TGSpacing {
 				14, //POSITION_TABLATURE
 				15, //POSITION_LYRIC
 				16, //POSITION_BOTTOM
+				5, // POSITION_JUMPS
 			},
 	};
 	
 	public TGTrackSpacing(TGLayout layout){
-		super( layout , POSITIONS , 16);
+		super( layout , POSITIONS , 17);
 	}
 }

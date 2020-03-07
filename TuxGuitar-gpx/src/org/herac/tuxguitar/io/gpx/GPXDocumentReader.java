@@ -244,6 +244,19 @@ public class GPXDocumentReader {
 					    masterBar.setAlternateEndings(altMask);
 					}
 
+					/* Directions: Target/Jump. (eg: Segno/DaSegno) */
+					NodeList directionsNodes = getChildNodeList(masterBarNode, "Directions");
+					if (directionsNodes != null) {
+					    for (int j = 0; j < directionsNodes.getLength(); j++) {
+						Node directionsNode = directionsNodes.item(j);
+						if (directionsNode.getNodeName().equals("Target") ){
+						    masterBar.getDirectionsTargets().add(directionsNode.getTextContent());
+						} else if (directionsNode.getNodeName().equals("Jump") ){
+						    masterBar.getDirectionsJumps().add(directionsNode.getTextContent());
+						}
+					    }
+					}
+
 					Node keyNode = getChildNode(masterBarNode, "Key");
 					if (keyNode != null) {
 						masterBar.setAccidentalCount(this.getChildNodeIntegerContent(keyNode, "AccidentalCount") ); 

@@ -1,5 +1,6 @@
 package org.herac.tuxguitar.io.gpx;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -22,6 +23,7 @@ import org.herac.tuxguitar.song.models.TGBeat;
 import org.herac.tuxguitar.song.models.TGChannel;
 import org.herac.tuxguitar.song.models.TGChannelParameter;
 import org.herac.tuxguitar.song.models.TGChord;
+import org.herac.tuxguitar.song.models.TGDirections;
 import org.herac.tuxguitar.song.models.TGDuration;
 import org.herac.tuxguitar.song.models.TGMeasure;
 import org.herac.tuxguitar.song.models.TGMeasureHeader;
@@ -157,6 +159,66 @@ public class GPXDocumentParser {
 			tgMeasureHeader.setRepeatOpen(mbar.isRepeatStart());
 			tgMeasureHeader.setRepeatClose(mbar.getRepeatCount());
 			tgMeasureHeader.setRepeatAlternative(mbar.getAlternateEndings());
+
+			if (!mbar.getDirectionsJumps().isEmpty()) {
+			    List<TGDirections.Jump> jumps = new ArrayList<TGDirections.Jump>(mbar.getDirectionsJumps().size());
+			    for (String jumpStr : mbar.getDirectionsJumps()) {
+				TGDirections.Jump jump = null;
+				if ("DaCapo".equals(jumpStr)) {
+				    jump = TGDirections.Jump.DA_CAPO;
+				} else if ("DaCapoAlCoda".equals(jumpStr)) {
+				    jump = TGDirections.Jump.DA_CAPO_AL_CODA;
+				} else if ("DaCoda".equals(jumpStr)) {
+				    jump = TGDirections.Jump.DA_CODA;
+				} else if ("DaDoubleCoda".equals(jumpStr)) {
+				    jump = TGDirections.Jump.DA_DOUBLE_CODA;
+				} else if ("DaSegno".equals(jumpStr)) {
+				    jump = TGDirections.Jump.DA_SEGNO;
+				} else if ("DaSegnoAlCoda".equals(jumpStr)) {
+				    jump = TGDirections.Jump.DA_SEGNO_AL_CODA;
+				} else if ("DaSegnoSegno".equals(jumpStr)) {
+				    jump = TGDirections.Jump.DA_SEGNO_SEGNO;
+				} else {
+				    System.out.println("Warning GPX parser: Unknown jump '" + jumpStr + "'");
+				}
+
+				if (jump != null) {
+				    jumps.add(jump);
+				}
+			    }
+
+			    if (!jumps.isEmpty()) {
+			    	tgMeasureHeader.getDirections().setJumps(jumps.toArray(new TGDirections.Jump[0]));
+			    }
+			}
+
+			if (!mbar.getDirectionsTargets().isEmpty()) {
+			    List<TGDirections.Target> targets = new ArrayList<TGDirections.Target>(mbar.getDirectionsTargets().size());
+			    for (String targetStr : mbar.getDirectionsTargets()) {
+				TGDirections.Target target = null;
+				if ("Coda".equals(targetStr)) {
+				    target = TGDirections.Target.CODA;
+				} else if ("DoubleCoda".equals(targetStr)) {
+				    target = TGDirections.Target.DOUBLE_CODA;
+				} else if ("Segno".equals(targetStr)) {
+				    target = TGDirections.Target.SEGNO;
+				} else if ("SegnoSegno".equals(targetStr)) {
+				    target = TGDirections.Target.SEGNO_SEGNO;
+				} else {
+				    System.out.println("Warning GPX parser: Unknown target '" + targetStr + "'");
+				}
+
+				if (target != null) {
+				    targets.add(target);
+				}
+			    }
+
+			    if (!targets.isEmpty()) {
+			    	tgMeasureHeader.getDirections().setTargets(targets.toArray(new TGDirections.Target[0]));
+			    }
+			}
+
+
 			tgMeasureHeader.setTripletFeel(parseTripletFeel(mbar));
 			if( mbar.getTime() != null && mbar.getTime().length == 2){
 				tgMeasureHeader.getTimeSignature().setNumerator(mbar.getTime()[0]);
@@ -216,7 +278,7 @@ public class GPXDocumentParser {
 			tgStart += tgMeasureHeader.getLength();
 		}
 	}
-	
+
 	private void parseBar(GPXBar bar , TGMeasure tgMeasure){
 		if (bar.getClef() != null) {
 			String clef = bar.getClef();

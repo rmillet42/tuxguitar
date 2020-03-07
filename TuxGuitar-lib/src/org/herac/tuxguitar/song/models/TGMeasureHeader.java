@@ -29,6 +29,7 @@ public abstract class TGMeasureHeader {
 	private int repeatClose;
 	private int tripletFeel;
 	private TGSong song;
+	private TGDirections directions = new TGDirections();
 	
 	public TGMeasureHeader(TGFactory factory){
 		this.number = 0;
@@ -153,11 +154,16 @@ public abstract class TGMeasureHeader {
 		this.getTempo().copyFrom(header.getTempo());
 		this.setMarker(header.hasMarker() ? header.getMarker().clone(factory) : null);
 		this.checkMarker();
+		this.getDirections().copyFrom(header.getDirections());
 	}
 	
 	public TGMeasureHeader clone(TGFactory factory){
 		TGMeasureHeader tgMeasureHeader = factory.newHeader();
 		tgMeasureHeader.copyFrom(factory, this);
 		return tgMeasureHeader;
+	}
+
+        public TGDirections getDirections() {
+	        return this.directions;
 	}
 }

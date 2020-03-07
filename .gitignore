@@ -1,0 +1,8 @@
+target/
+
+*.o
+*.so
+
+*~
+*.orig
+*.bak

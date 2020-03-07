@@ -24,6 +24,8 @@ import org.herac.tuxguitar.song.models.TGMarker;
 import org.herac.tuxguitar.song.models.TGMeasure;
 import org.herac.tuxguitar.song.models.TGMeasureHeader;
 import org.herac.tuxguitar.song.models.TGNote;
+import org.herac.tuxguitar.song.models.TGDirections.Jump;
+import org.herac.tuxguitar.song.models.TGDirections.Target;
 import org.herac.tuxguitar.ui.resource.UIColor;
 import org.herac.tuxguitar.ui.resource.UIPainter;
 import org.herac.tuxguitar.ui.resource.UIResourceFactory;
@@ -599,6 +601,11 @@ public class TGMeasureImpl extends TGMeasure{
 		if(this.getHeader().getRepeatAlternative() > 0){
 			ts.setSize(TGTrackSpacing.POSITION_REPEAT_ENDING,layout.getRepeatEndingSpacing());
 		}
+		if (this.getHeader().getDirections().getJumps() != null || this.getHeader().getDirections().getTargets() != null) {
+			int cnt = ((this.getHeader().getDirections().getJumps() != null) ? this.getHeader().getDirections().getJumps().length : 0)
+					+ ((this.getHeader().getDirections().getTargets() != null) ? this.getHeader().getDirections().getTargets().length : 0);
+			ts.setSize(TGTrackSpacing.POSITION_JUMPS, layout.getTextSpacing() * cnt);
+		}
 		if(this.division1){
 			ts.setSize(TGTrackSpacing.POSITION_DIVISION_TYPE_1,layout.getDivisionTypeSpacing());
 		}
@@ -650,6 +657,7 @@ public class TGMeasureImpl extends TGMeasure{
 			this.paintTripletFeel(layout,painter);
 			this.paintDivisions(layout,painter);
 			this.paintRepeatEnding(layout,painter);
+			this.paintDirections(layout, painter);
 			this.paintPlayMode(layout,painter);
 			this.paintLoopMarker(layout, painter);
 		}
@@ -683,6 +691,44 @@ public class TGMeasureImpl extends TGMeasure{
 			painter.drawString(string, (x1 + (5.0f * scale)), (y1 + painter.getFMTopLine() + (4f * scale)));
 		}
 	}
+
+	public void paintDirections(TGLayout layout,UIPainter painter){
+		if (this.getHeader().getDirections().getJumps() != null) {
+			int cnt = 0;
+			for (Jump j : this.getHeader().getDirections().getJumps()) {
+				float scale = layout.getScale();
+				float x2 = (getPosX() + getWidth(layout) + getSpacing());
+				float y1 = (getPosY() + getTs().getPosition(TGTrackSpacing.POSITION_JUMPS) + layout.getTextSpacing() * (this.getHeader().getDirections().getJumps().length - 1 - cnt));
+				//layout.setRepeatEndingStyle(painter);
+				float w = painter.getFMWidth(j.getDisplayName());
+				painter.drawString(j.getDisplayName(), (x2 - (5.0f * scale) - w), (y1 + painter.getFMTopLine() + (4f * scale)));
+				++cnt;
+				if (w > this.width) {
+					this.width = w;
+					this.getHeaderImpl().notifyWidth(this.width);
+				}
+			}
+		}
+
+		if (this.getHeader().getDirections().getTargets() != null) {
+			int cnt = 0;
+			for (Target j : this.getHeader().getDirections().getTargets()) {
+				float scale = layout.getScale();
+				float x1 = (getPosX() + getHeaderImpl().getLeftSpacing(layout) + getFirstNoteSpacing(layout));
+				float y1 = (getPosY() + getTs().getPosition(TGTrackSpacing.POSITION_JUMPS) + layout.getTextSpacing() * (this.getHeader().getDirections().getTargets().length - 1 - cnt));
+				//layout.setRepeatEndingStyle(painter);
+				// TODO: print symbol instead of text (cf. TGClefPainter.java)
+				float w = painter.getFMWidth(j.getDisplayName());
+				painter.drawString(j.getDisplayName(), (x1 + (5.0f * scale)), (y1 + painter.getFMTopLine() + (4f * scale)));
+				++cnt;
+				if (w > this.width) {
+					this.width = w;
+					this.getHeaderImpl().notifyWidth(this.width);
+				}
+			}
+		}
+	}
+
 	
 	/**
 	 * Pinta las notas

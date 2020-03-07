@@ -1,5 +1,8 @@
 package org.herac.tuxguitar.io.gpx.score;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GPXMasterBar {
 	
 	private int[] barIds;
@@ -11,7 +14,9 @@ public class GPXMasterBar {
 	private String mode;
 	private String tripletFeel;
 	private int alternateEndings;
-	
+	private List<String> directionsTargets = new ArrayList<String>();
+	private List<String> directionsJumps = new ArrayList<String>();
+
 	public GPXMasterBar(){
 		this.accidentalCount = 0;
 		this.alternateEndings = 0;
@@ -80,5 +85,13 @@ public class GPXMasterBar {
 
 	public void setAlternateEndings(int alternateEndings) {
 		this.alternateEndings = alternateEndings;
+	}
+
+	public List<String> getDirectionsTargets() {
+		return this.directionsTargets;
+	}
+
+	public List<String> getDirectionsJumps() {
+		return this.directionsJumps;
 	}
 }
